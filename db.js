@@ -64,7 +64,41 @@ var db = {
             });
         });
         return promise;
-    }
+    },
+    
+    newUser: function (username, email, firstname, password) {
+        var promise = new Promise(function (resolve, reject) {
+            db.connect().then(function (con) {
+                con.query("INSERT INTO hackprinceton.User (`Username`, `Email`, `FirstName`, `Password`) VALUES (?, ?, ?, sha2(?, 256));",
+                    [username, email, firstname, password],
+                    function (error, results, fields) {
+                        if (error) {
+                            reject(error);
+                        }
+                        resolve(results);
+                    });
+            });
+        });
+        return promise;
+    },
+    
+    getGroupsWithUser: function (id) {
+        var promise = new Promise(function (resolve, reject) {
+            db.connect().then(function (con) {
+                con.query("SELECT `GroupID` FROM `UsersToGroups` WHERE `UserID` = ?",
+                    [id],
+                    function (error, results, fields) {
+                        if (error) {
+                            reject(error);
+                        }
+                        resolve(results);
+                    });
+            });
+        });
+        return promise;
+    },
+    
+
     
 };
 

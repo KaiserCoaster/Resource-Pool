@@ -7,7 +7,11 @@ var db = require('./../../db');
 var router = express.Router();
 
 router.post('/', function (req, res, next) {
-    res.json('creating new user');
+    db.newUser(req.body.username, req.body.email, req.body.firstname, req.body.password).then(function (result) {
+        res.json(result);
+    }).catch(function (error) {
+        res.json(error);
+    });
 });
 
 router.get('/:id', function (req, res, next) {
@@ -25,6 +29,13 @@ router.put('/:id', function (req, res, next) {
 
 router.get('/:id/groups', function (req, res, next) {
     res.json('getting groups that user with id ' + req.params.id + ' is in');
+    
+    db.getGroupsWithUser(req.params.id).then(function (result) {
+        res.json(result);
+    }).catch(function (error) {
+        res.json(error);
+    });
+    
 });
 
 
